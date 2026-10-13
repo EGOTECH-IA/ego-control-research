@@ -43,11 +43,11 @@ def main():
     gate = CONTROL / "core/rust/target/release/ego-core-gate"
     deb("ego-control-host-lab", "0.1.0", [
         (gate, "/usr/lib/ego-control/ego-core-gate"),
-        (HOST / "host_guard.py", "/usr/lib/ego-control/ego-host-guard"),
-        (TRUST / "trust.py", "/usr/lib/ego-control/ego-trust"),
+        (HOST / "src/ego_host_guard/service.py", "/usr/lib/ego-control/ego-host-guard"),
+        (TRUST / "src/ego_trust/issuer.py", "/usr/lib/ego-control/ego-trust"),
     ])
     deb("ego-control-guest-lab", "0.1.0", [
-        (GUEST / "guest.py", "/usr/lib/ego-control/ego-guest"),
+        (GUEST / "src/ego_guest_control/client.py", "/usr/lib/ego-control/ego-guest"),
     ])
     print("LAB packages built: no policy secret, protected storage or daemon activation included.")
 
