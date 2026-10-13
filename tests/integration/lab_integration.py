@@ -35,7 +35,9 @@ def main():
         key, policy, sock, audit = [base / n for n in ("policy.key", "policy.json", "host.sock", "audit.jsonl")]
         run(sys.executable, str(TRUST / "trust.py"), "init", "--key", str(key))
         run(sys.executable, str(TRUST / "trust.py"), "sign", "--key", str(key),
-            "--subject", f"uid:{os.getuid()}", "--scope", "allowed", "--out", str(policy))
+            "--subject", f"uid:{os.getuid()}", "--scope", "allowed",
+            "--tenant", "tuegos-lab", "--revision", "1", "--max-bytes", "64",
+            "--out", str(policy))
         process = subprocess.Popen(
             [sys.executable, str(HOST / "host_guard.py"), "--root", str(root),
              "--socket", str(sock), "--key", str(key), "--policy", str(policy),
@@ -59,6 +61,8 @@ def main():
                     assert b"FORBIDDEN_LAB_BYTES" not in result.stdout, path
                 print(f"{'ALLOW' if allowed else 'DENY'}: {path}")
             check("allowed/readme.txt", True)
+            (root / "allowed" / "big.txt").write_bytes(b"A" * 128)
+            check("allowed/big.txt", False)
             check("private/credentials.txt", False)
             check("allowed/../../private/credentials.txt", False)
             check("allowed/../private/credentials.txt", False)
@@ -69,7 +73,7 @@ def main():
             # Poison the authenticated policy and verify fail-closed behavior.
             policy.write_bytes(b'{"policy":{},"mac":"bad"}')
             check("allowed/readme.txt", False)
-            print("EGO LAB: 7 negative/positive checks passed; audit:", audit.read_text().count("\n"), "records")
+            print("EGO LAB: 8 negative/positive checks passed; audit:", audit.read_text().count("\n"), "records")
         finally:
             process.terminate()
             try: process.wait(timeout=3)
