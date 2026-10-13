@@ -1,5 +1,7 @@
 # EGO CONTROL — End-to-end integration laboratory
 
+> **Para orientarse:** [Mapa del repositorio y orden de lectura](REPOSITORY_MAP_ES.md). El código fuente está organizado por responsabilidades; los puntos de entrada antiguos permanecen como compatibilidad.
+
 **Status:** connected research prototype, not certified VM containment or production protection.
 
 This public repository contains a launcher/tests referencing four companion repositories:
